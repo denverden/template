@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {},
   "devDependencies": {
-    "gulp": "gulp",
+    "gulp": "latest",
   	"gulp-sass": "latest",
   	"gulp-htmlmin": "latest",
   	"browser-sync": "latest",
