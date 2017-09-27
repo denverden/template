@@ -1,10 +1,11 @@
 {
-  "name": "test",
+  "name": "template",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "dependencies": {},
   "devDependencies": {
+    "gulp": "gulp",
   	"gulp-sass": "latest",
   	"gulp-htmlmin": "latest",
   	"browser-sync": "latest",
@@ -20,7 +21,7 @@
   	"gulp-rigger": "latest"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "template": "echo \"Error: no template specified\" && exit 1"
   },
   "author": "",
   "license": "ISC"
