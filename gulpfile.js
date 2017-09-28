@@ -1,33 +1,33 @@
-var gulp       = require('gulp'), // Подключаем Gulp
-	sass         = require('gulp-sass'), //Подключаем Sass пакет,
-	htmlmin = require('gulp-htmlmin'), //Минификатор html
-	rigger = require('gulp-rigger'), //Минификатор html
-	browserSync  = require('browser-sync'), // Подключаем Browser Sync
-	concat       = require('gulp-concat'), // Подключаем gulp-concat (для конкатенации файлов)
-	uglify       = require('gulp-uglifyjs'), // Подключаем gulp-uglifyjs (для сжатия JS)
-	cssnano      = require('gulp-cssnano'), // Подключаем пакет для минификации CSS
-	rename       = require('gulp-rename'), // Подключаем библиотеку для переименования файлов
-	del          = require('del'), // Подключаем библиотеку для удаления файлов и папок
-	imagemin     = require('gulp-imagemin'), // Подключаем библиотеку для работы с изображениями
-	pngquant     = require('imagemin-pngquant'), // Подключаем библиотеку для работы с png
-	cache        = require('gulp-cache'), // Подключаем библиотеку кеширования
-	autoprefixer = require('gulp-autoprefixer');// Подключаем библиотеку для автоматического добавления префиксов
+var gulp 			= require('gulp'),				// Подключаем Gulp
+	sass 			= require('gulp-sass'),			// Подключаем Sass
+	htmlmin 		= require('gulp-htmlmin'),		// Подключаем минификатор html
+	rigger 			= require('gulp-rigger'),		// Подключаем Склейку html
+	browserSync  	= require('browser-sync'),		// Подключаем Browser Sync
+	concat       	= require('gulp-concat'),		// Подключаем gulp-concat (для склейки файлов)
+	uglify       	= require('gulp-uglifyjs'),		// Подключаем gulp-uglifyjs (для сжатия JS)
+	cssnano      	= require('gulp-cssnano'),		// Подключаем пакет для минификации CSS
+	rename       	= require('gulp-rename'),		// Подключаем библиотеку для переименования файлов
+	del          	= require('del'),				// Подключаем библиотеку для удаления файлов и папок
+	imagemin     	= require('gulp-imagemin'),		// Подключаем библиотеку для работы с изображениями
+	pngquant     	= require('imagemin-pngquant'), // Подключаем библиотеку для работы с png
+	cache        	= require('gulp-cache'),		// Подключаем библиотеку кеширования
+	autoprefixer 	= require('gulp-autoprefixer');	// Подключаем библиотеку для автоматического добавления префиксов
 
 gulp.task('htmlmin', function() {
-  return gulp.src('app/*.html')
-    .pipe(htmlmin({collapseWhitespace: true}))
-    .pipe(gulp.dest('dist'))
+  return gulp.src('app/*.html') 					// Выберем файлы по нужному пути
+    .pipe(htmlmin({collapseWhitespace: true})) 		// Минифицируем файлы
+    .pipe(gulp.dest('dist')) 						// Выгружаем в продакшен
 });
 
 gulp.task('html', function () {
-    return gulp.src('app/html/*.html') //Выберем файлы по нужному пути
-        .pipe(rigger()) //Прогоним через rigger
-        .pipe(gulp.dest('app/')) //выгрузим их в папку build
+    return gulp.src('app/html/**/[^_]*.html') 		//Выберем файлы по нужному пути без начального подчеркивания
+        .pipe(rigger()) 							//Прогоним через rigger
+        .pipe(gulp.dest('app/')) 					//выгрузим их в папку app
         .pipe(browserSync.reload({stream: true}))
 });
 
 gulp.task('sass', function(){ // Создаем таск Sass
-	return gulp.src(['app/sass/**/*.scss', 'app/libs/bootstrap-sass/assets/stylesheets/**/*.scss']) // Берем источник
+	return gulp.src('app/sass/**/*.scss') // Берем источник
 		.pipe(sass()) // Преобразуем Sass в CSS посредством gulp-sass
 		.pipe(autoprefixer(['last 15 versions', '> 1%', 'ie 8', 'ie 7'], { cascade: true })) // Создаем префиксы
 		.pipe(gulp.dest('app/css')) // Выгружаем результата в папку app/css
@@ -45,11 +45,11 @@ gulp.task('browser-sync', function() { // Создаем таск browser-sync
 
 gulp.task('js-libs', function() {
 	return gulp.src([ // Берем все необходимые библиотеки
-		'app/libs/jQuery/dist/jquery.min.js', // Берем jQuery
-		'app/libs/bootstrap-sass/assets/javascripts/bootstrap.min.js',
-		'app/libs/mmenu/jquery.mmenu.js',
-		'app/libs/wow/dist/wow.min.js',
-		'app/js/common.js'
+		//'app/libs/jQuery/dist/jquery.min.js', // Берем jQuery
+		//'app/libs/bootstrap-sass/assets/javascripts/bootstrap.min.js',
+		//'app/libs/mmenu/jquery.mmenu.js',
+		//'app/libs/wow/dist/wow.min.js',
+		//'app/js/common.js'
 		])
 		.pipe(concat('libs.min.js')) // Собираем их в кучу в новом файле libs.min.js
 		.pipe(uglify()) // Сжимаем JS файл
@@ -58,9 +58,9 @@ gulp.task('js-libs', function() {
 
 gulp.task('css-libs', ['sass'], function() {
 	return gulp.src([
-		'app/css/bootstrap.css',
-		'app/libs/animate.css/animate.min.css',
-		'app/libs/mmenu/jquery.mmenu.all.css',
+		//'app/css/bootstrap.css',
+		//'app/libs/animate.css/animate.min.css',
+		//'app/libs/mmenu/jquery.mmenu.all.css',
 		'app/css/style.css',
 		]) // Выбираем файлы
 		.pipe(concat('libs.min.css')) // Собираем их в кучу в новом файле libs.min.css
@@ -71,8 +71,7 @@ gulp.task('css-libs', ['sass'], function() {
 
 gulp.task('watch', ['html', 'sass', 'css-libs', 'js-libs', 'browser-sync'], function() {
 	gulp.watch('app/sass/**/*.scss', ['css-libs']); // Наблюдение за sass файлами в папке sass
-	gulp.watch('app/libs/bootstrap-sass/assets/stylesheets/**/*.scss', ['css-libs']); // Наблюдение за sass файлами в папке sass
-	gulp.watch('app/html/**/*.html', ['html']); // Наблюдение за HTML файлами в корне проекта
+	gulp.watch('app/html/**/*.html', ['html']); // Наблюдение за HTML файлами в папке html
 	gulp.watch('app/js/**/*.js', browserSync.reload);   // Наблюдение за JS файлами в папке js
 });
 
@@ -102,8 +101,8 @@ gulp.task('build', ['clean', 'img', 'html', 'sass', 'css-libs', 'js-libs', 'html
 	var buildJs = gulp.src(['app/js/libs.min.js']) // Переносим скрипты в продакшен
 	.pipe(gulp.dest('dist/js'))
 
-	//var buildHtml = gulp.src('app/*.html') // Переносим HTML в продакшен
-	//.pipe(gulp.dest('dist'));
+	var buildHtml = gulp.src('app/*.html') // Переносим HTML в продакшен
+	.pipe(gulp.dest('dist'));
 
 });
 
